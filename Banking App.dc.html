@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="stylesheet" href="systems/modernist/styles.css">
+<style>
+  body{margin:0;background:#e5e3de;}
+  .row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:var(--radius-md);cursor:pointer;margin-bottom:8px;}
+  .qa{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;text-align:center;cursor:pointer;color:var(--color-text);}
+  .qa-icon{width:52px;height:52px;border-radius:var(--radius-lg);background:var(--color-surface);border:1px solid var(--color-divider);display:flex;align-items:center;justify-content:center;color:var(--color-text);}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;cursor:pointer;}
+</style>
+</helmet>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" width="390" height="844" hint-size="390,844">
+<div style="width:100%;height:100%;display:flex;flex-direction:column;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);">
+  <div style="height:52px;flex:none;background:var(--color-bg);"></div>
+  <div style="display:flex;align-items:center;gap:10px;padding:10px 16px 14px;border-bottom:2px solid var(--color-divider);flex:none;">
+    <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
+      <button style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--color-text);padding:0;" onClick="{{ goBack }}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </sc-if>
+    <span class="nav-brand" style="margin-right:auto;">{{ headerTitle }}</span>
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <button style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--color-text);padding:0;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </sc-if>
+  </div>
+
+  <div style="flex:1;overflow-y:auto;padding:16px;padding-bottom:24px;">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <p style="font-size:13px;opacity:.6;margin:0 0 2px;">Good evening</p>
+      <h3 style="margin:0 0 20px;">Isabelle Ferreira</h3>
+      <sc-for list="{{ accountsView }}" as="acc" hint-placeholder-count="2">
+        <div class="card elev-sm" style="padding:16px;margin-bottom:12px;">
+          <span class="card-kicker">{{ acc.label }}</span>
+          <span style="display:block;font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:28px;letter-spacing:-0.02em;">{{ acc.balanceFmt }}</span>
+          <span class="card-meta">BSB {{ acc.bsb }} · Acc {{ acc.acc }}</span>
+        </div>
+      </sc-for>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0;">
+        <div class="qa" onClick="{{ openTransfer }}"><div class="qa-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 2l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11V9a4 4 0 014-4h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 22l-4-4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 13v2a4 4 0 01-4 4H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Transfer</div>
+        <div class="qa" onClick="{{ openPay }}"><div class="qa-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Pay someone</div>
+        <div class="qa" onClick="{{ openConcierge }}"><div class="qa-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>Concierge</div>
+        <div class="qa" onClick="{{ openProfile }}"><div class="qa-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>Profile</div>
+      </div>
+      <div class="card elev-sm" style="margin-bottom:24px;cursor:pointer;" onClick="{{ openConcierge }}">
+        <span class="card-kicker">Your concierge desk</span>
+        <h4 class="card-title" style="margin-bottom:2px;">Curated for you</h4>
+        <p class="card-body">Offers and bookings, arranged on your behalf.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px;">
+          <span class="tag tag-outline">Travel</span>
+          <span class="tag tag-outline">Shopping</span>
+          <span class="tag tag-outline">Fuel</span>
+          <span class="tag tag-outline">Home loans</span>
+        </div>
+        <button class="btn btn-ghost" style="padding-left:0;">Explore offers →</button>
+      </div>
+      <h5 style="margin-bottom:10px;">Recent activity</h5>
+      <div class="card elev-sm" style="padding:0 14px;">
+        <sc-for list="{{ txnsView }}" as="t" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--color-divider);">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:36px;height:36px;border-radius:var(--radius-md);background:var(--color-surface);display:flex;align-items:center;justify-content:center;flex:none;">
+                <sc-if value="{{ t.isCredit }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17 7L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M17 17H7V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></sc-if>
+                <sc-if value="{{ t.isDebit }}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 7h10v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></sc-if>
+              </div>
+              <div><div style="font-size:14px;font-weight:600;">{{ t.name }}</div><div style="font-size:11px;opacity:.55;">{{ t.date }}</div></div>
+            </div>
+            <div style="font-weight:600;">{{ t.amountFmt }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTransfer }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ transferStepForm }}" hint-placeholder-val="{{ true }}">
+        <h5 style="margin-bottom:10px;">From</h5>
+        <sc-for list="{{ transferFromOptions }}" as="acc" hint-placeholder-count="2">
+          <div class="row" style="{{ acc.rowStyle }}" onClick="{{ acc.onSelect }}">
+            <div><div style="font-weight:600;font-size:14px;">{{ acc.label }}</div><div class="card-meta">{{ acc.balanceFmt }}</div></div>
+            <sc-if value="{{ acc.selected }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--color-accent)" stroke-width="1.6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></sc-if>
+          </div>
+        </sc-for>
+        <div style="display:flex;align-items:center;gap:10px;margin:14px 0;">
+          <div style="flex:1;height:1px;background:var(--color-divider);"></div>
+          <button class="btn btn-icon" onClick="{{ swapTransferAccounts }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 10l5-6 5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 14l5 6 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div style="flex:1;height:1px;background:var(--color-divider);"></div>
+        </div>
+        <div class="card" style="padding:12px 14px;margin-bottom:20px;">
+          <div class="card-meta">To</div>
+          <div style="font-weight:600;">{{ transferToAccount.label }}</div>
+        </div>
+        <div class="field" style="margin-bottom:24px;">
+          <label>Amount (AUD)</label>
+          <input class="input" style="font-size:22px;font-family:var(--font-heading);font-weight:var(--font-heading-weight);" inputmode="decimal" placeholder="$0.00" value="{{ transfer.amount }}" onChange="{{ setTransferAmount }}"/>
+        </div>
+        <button class="btn btn-primary btn-block" disabled="{{ transferContinueDisabled }}" onClick="{{ submitTransferForm }}">Review transfer</button>
+      </sc-if>
+      <sc-if value="{{ transferStepReview }}" hint-placeholder-val="{{ false }}">
+        <h5 style="margin-bottom:14px;">Review transfer</h5>
+        <div class="card elev-sm" style="padding:16px;margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;justify-content:space-between;"><span class="text-muted">From</span><span style="font-weight:600;">{{ transferFromAccount.label }}</span></div>
+          <div class="hr" style="margin:0;"></div>
+          <div style="display:flex;justify-content:space-between;"><span class="text-muted">To</span><span style="font-weight:600;">{{ transferToAccount.label }}</span></div>
+          <div class="hr" style="margin:0;"></div>
+          <div style="display:flex;justify-content:space-between;"><span class="text-muted">Amount</span><span style="font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:20px;">{{ transferAmountFmt }}</span></div>
+        </div>
+        <button class="btn btn-primary btn-block" onClick="{{ confirmTransfer }}" disabled="{{ transfer.loading }}">{{ confirmTransferLabel }}</button>
+      </sc-if>
+      <sc-if value="{{ transferStepSuccess }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 12px;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--color-accent)" stroke-width="1.6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 style="margin:16px 0 4px;">Transfer complete</h3>
+          <p class="text-muted" style="margin:0 0 20px;">{{ transferAmountFmt }} moved to {{ transferToAccount.label }}</p>
+          <button class="btn btn-primary btn-block" onClick="{{ goHome }}">Done</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ transferStepError }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 12px;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none"><path d="M12 3L2 20h20L12 3z" stroke="var(--color-accent)" stroke-width="1.6" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="14" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="var(--color-accent)"/></svg>
+          <h3 style="margin:16px 0 4px;">Transfer failed</h3>
+          <p class="text-muted" style="margin:0 0 20px;">{{ transfer.error }}</p>
+          <button class="btn btn-primary btn-block" onClick="{{ editTransfer }}">Edit transfer</button>
+        </div>
+      </sc-if>
+    </sc-if>
+
+    <sc-if value="{{ isPay }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ payStepForm }}" hint-placeholder-val="{{ true }}">
+        <div class="seg" style="margin-bottom:18px;width:100%;">
+          <div class="seg-opt" style="{{ payMethodPayIdStyle }}" onClick="{{ setPayMethodPayId }}">PayID</div>
+          <div class="seg-opt" style="{{ payMethodBpayStyle }}" onClick="{{ setPayMethodBpay }}">BPAY</div>
+        </div>
+        <h5 style="margin-bottom:10px;">From</h5>
+        <sc-for list="{{ payFromOptions }}" as="acc" hint-placeholder-count="2">
+          <div class="row" style="{{ acc.rowStyle }}" onClick="{{ acc.onSelect }}">
+            <div><div style="font-weight:600;font-size:14px;">{{ acc.label }}</div><div class="card-meta">{{ acc.balanceFmt }}</div></div>
+            <sc-if value="{{ acc.selected }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--color-accent)" stroke-width="1.6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></sc-if>
+          </div>
+        </sc-for>
+
+        <sc-if value="{{ payMethodIsPayId }}" hint-placeholder-val="{{ true }}">
+          <div class="field" style="margin:18px 0 6px;">
+            <label>PayID (phone or email)</label>
+            <div style="display:flex;gap:8px;">
+              <input class="input" placeholder="0412 345 678" value="{{ pay.payid }}" onChange="{{ setPayId }}"/>
+              <button class="btn btn-secondary" onClick="{{ resolvePayIdNow }}" disabled="{{ pay.resolving }}">{{ resolveButtonLabel }}</button>
+            </div>
+          </div>
+          <sc-if value="{{ pay.resolvedName }}" hint-placeholder-val="{{ false }}">
+            <div class="tag tag-accent" style="margin-bottom:14px;">Paying {{ pay.resolvedName }}</div>
+          </sc-if>
+          <sc-if value="{{ pay.resolveError }}" hint-placeholder-val="{{ false }}">
+            <p style="color:var(--color-accent-700);font-size:13px;margin:0 0 14px;">{{ pay.resolveError }}</p>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{ payMethodIsBpay }}" hint-placeholder-val="{{ false }}">
+          <div class="field" style="margin-top:18px;">
+            <label>Biller code</label>
+            <input class="input" placeholder="123456" value="{{ pay.billerCode }}" onChange="{{ setBillerCode }}"/>
+          </div>
+          <div class="field">
+            <label>Reference number</label>
+            <input class="input" placeholder="000123456789" value="{{ pay.ref }}" onChange="{{ setRef }}"/>
+          </div>
+        </sc-if>
+
+        <div class="field" style="margin:14px 0 24px;">
+          <label>Amount (AUD)</label>
+          <input class="input" style="font-size:22px;font-family:var(--font-heading);font-weight:var(--font-heading-weight);" inputmode="decimal" placeholder="$0.00" value="{{ pay.amount }}" onChange="{{ setPayAmount }}"/>
+        </div>
+        <button class="btn btn-primary btn-block" disabled="{{ payContinueDisabled }}" onClick="{{ submitPayForm }}">Review payment</button>
+      </sc-if>
+
+      <sc-if value="{{ payStepReview }}" hint-placeholder-val="{{ false }}">
+        <h5 style="margin-bottom:14px;">Review payment</h5>
+        <div class="card elev-sm" style="padding:16px;margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;justify-content:space-between;"><span class="text-muted">From</span><span style="font-weight:600;">{{ payFromAccount.label }}</span></div>
+          <div class="hr" style="margin:0;"></div>
+          <div style="display:flex;justify-content:space-between;"><span class="text-muted">{{ payReviewToLabel }}</span><span style="font-weight:600;text-align:right;">{{ payReviewToValue }}</span></div>
+          <div class="hr" style="margin:0;"></div>
+          <div style="display:flex;justify-content:space-between;"><span class="text-muted">Amount</span><span style="font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:20px;">{{ payAmountFmt }}</span></div>
+        </div>
+        <button class="btn btn-primary btn-block" onClick="{{ confirmPay }}" disabled="{{ pay.loading }}">{{ confirmPayLabel }}</button>
+      </sc-if>
+
+      <sc-if value="{{ payStepSuccess }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 12px;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--color-accent)" stroke-width="1.6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 style="margin:16px 0 4px;">Payment sent</h3>
+          <p class="text-muted" style="margin:0 0 20px;">{{ payAmountFmt }} to {{ payReviewToValue }}</p>
+          <button class="btn btn-primary btn-block" onClick="{{ goHome }}">Done</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ payStepError }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 12px;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none"><path d="M12 3L2 20h20L12 3z" stroke="var(--color-accent)" stroke-width="1.6" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="14" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="var(--color-accent)"/></svg>
+          <h3 style="margin:16px 0 4px;">Payment failed</h3>
+          <p class="text-muted" style="margin:0 0 20px;">{{ pay.error }}</p>
+          <button class="btn btn-primary btn-block" onClick="{{ editPay }}">Edit payment</button>
+        </div>
+      </sc-if>
+    </sc-if>
+
+    <sc-if value="{{ isConcierge }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ conciergeStepHub }}" hint-placeholder-val="{{ true }}">
+        <p class="text-muted" style="margin:0 0 16px;">Offers and requests, arranged by your dedicated desk.</p>
+        <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="4">
+          <div class="card" style="margin-bottom:10px;cursor:pointer;flex-direction:row;align-items:center;justify-content:space-between;" onClick="{{ cat.onOpen }}">
+            <div>
+              <div class="card-title" style="font-size:15px;">{{ cat.title }}</div>
+              <div class="card-body" style="margin-top:2px;">{{ cat.desc }}</div>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex:none;"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{ conciergeStepDetail }}" hint-placeholder-val="{{ false }}">
+        <div class="card elev-sm" style="padding:18px;margin-bottom:20px;">
+          <span class="card-kicker">Concierge request</span>
+          <h4 class="card-title">{{ conciergeCategory.title }}</h4>
+          <p class="card-body">{{ conciergeCategory.desc }}</p>
+        </div>
+        <p class="text-muted" style="margin-bottom:20px;">We'll have a concierge specialist call you within one business day to arrange this.</p>
+        <button class="btn btn-primary btn-block" disabled="{{ concierge.requesting }}" onClick="{{ submitConciergeRequest }}">{{ conciergeRequestLabel }}</button>
+      </sc-if>
+      <sc-if value="{{ conciergeStepRequested }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 12px;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="var(--color-accent)" stroke-width="1.6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 style="margin:16px 0 4px;">Request received</h3>
+          <p class="text-muted" style="margin:0 0 6px;">Reference {{ concierge.ref }}</p>
+          <p class="text-muted" style="margin:0 0 20px;">Your concierge desk will be in touch shortly.</p>
+          <button class="btn btn-primary btn-block" onClick="{{ goHome }}">Done</button>
+        </div>
+      </sc-if>
+    </sc-if>
+
+    <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--color-surface);border:1px solid var(--color-divider);display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:20px;">IF</div>
+        <div><div style="font-weight:600;font-size:16px;">Isabelle Ferreira</div><div class="card-meta">isabelle.ferreira@email.com</div></div>
+      </div>
+      <div class="card" style="padding:0 14px;">
+        <div style="padding:14px 0;border-bottom:1px solid var(--color-divider);">Personal details</div>
+        <div style="padding:14px 0;border-bottom:1px solid var(--color-divider);">Security &amp; privacy</div>
+        <div style="padding:14px 0;border-bottom:1px solid var(--color-divider);">Notifications</div>
+        <div style="padding:14px 0;border-bottom:1px solid var(--color-divider);">Help &amp; support</div>
+        <div style="padding:14px 0;color:var(--color-accent-700);">Log out</div>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <sc-if value="{{ showTabBar }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;justify-content:space-around;align-items:center;padding:10px 0 18px;border-top:1px solid var(--color-divider);flex:none;">
+      <div class="tab" style="color:{{ tabHomeColor }}" onClick="{{ goHome }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-8 9 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v10h14V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Home</div>
+      <div class="tab" style="color:{{ tabTransferColor }}" onClick="{{ openTransfer }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 2l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11V9a4 4 0 014-4h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 22l-4-4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 13v2a4 4 0 01-4 4H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Transfers</div>
+      <div class="tab" style="color:{{ tabPayColor }}" onClick="{{ openPay }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Pay</div>
+      <div class="tab" style="color:{{ tabConciergeColor }}" onClick="{{ openConcierge }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Concierge</div>
+      <div class="tab" style="color:{{ tabProfileColor }}" onClick="{{ openProfile }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Profile</div>
+    </div>
+  </sc-if>
+</div>
+</x-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  api() { return import('./bank-api.js'); }
+  state = {
+    screen: 'home',
+    accounts: [
+      { id: 'everyday', label: 'Everyday account', balance: 8240.15, bsb: '062-000', acc: '4471 8823' },
+      { id: 'savings', label: 'Savings account', balance: 32910.60, bsb: '062-000', acc: '4471 8831' },
+    ],
+    txns: [
+      { id: 1, name: 'Woolworths', date: 'Today, 6:42pm', amount: -64.20 },
+      { id: 2, name: 'To Marcus Nguyen', date: 'Yesterday', amount: -250.00 },
+      { id: 3, name: 'Salary — Atlas Group', date: 'Mon', amount: 4120.00 },
+    ],
+    dailySent: 0,
+    transfer: { step: 'form', fromId: 'everyday', toId: 'savings', amount: '', error: null, loading: false },
+    pay: { method: 'payid', step: 'form', fromId: 'everyday', payid: '', resolvedName: null, resolving: false, resolveError: null, billerCode: '', ref: '', amount: '', error: null, loading: false },
+    concierge: { step: 'hub', category: null, requesting: false, ref: null },
+  };
+
+  fmt(n) { return '$' + Number(n).toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  rowStyle(selected) {
+    return 'display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:var(--radius-md);cursor:pointer;margin-bottom:8px;' +
+      (selected ? 'border:1.5px solid var(--color-accent);background:var(--color-accent-100);' : 'border:1px solid var(--color-divider);background:var(--color-surface);');
+  }
+
+  goHome = () => this.setState({ screen: 'home' });
+  openTransfer = () => this.setState((s) => ({ screen: 'transfer', transfer: { ...s.transfer, step: 'form', amount: '', error: null } }));
+  openPay = () => this.setState((s) => ({ screen: 'pay', pay: { ...s.pay, step: 'form', amount: '', error: null } }));
+  openConcierge = () => this.setState((s) => ({ screen: 'concierge', concierge: { ...s.concierge, step: 'hub', category: null, ref: null } }));
+  openProfile = () => this.setState({ screen: 'profile' });
+
+  goBack = () => {
+    const { screen, transfer, pay, concierge } = this.state;
+    if (screen === 'transfer') return transfer.step === 'review' ? this.editTransfer() : this.goHome();
+    if (screen === 'pay') return pay.step === 'review' ? this.editPay() : this.goHome();
+    if (screen === 'concierge') return concierge.step !== 'hub' ? this.backToHub() : this.goHome();
+    this.goHome();
+  };
+
+  setTransferFrom = (id) => this.setState((s) => {
+    const toId = s.accounts.find((a) => a.id !== id).id;
+    return { transfer: { ...s.transfer, fromId: id, toId } };
+  });
+  swapTransferAccounts = () => this.setState((s) => ({ transfer: { ...s.transfer, fromId: s.transfer.toId, toId: s.transfer.fromId } }));
+  setTransferAmount = (e) => { const v = e.target.value.replace(/[^0-9.]/g, ''); this.setState((s) => ({ transfer: { ...s.transfer, amount: v } })); };
+  submitTransferForm = () => this.setState((s) => ({ transfer: { ...s.transfer, step: 'review' } }));
+  editTransfer = () => this.setState((s) => ({ transfer: { ...s.transfer, step: 'form', error: null } }));
+  confirmTransfer = async () => {
+    const { accounts, transfer } = this.state;
+    const amount = parseFloat(transfer.amount) || 0;
+    this.setState((s) => ({ transfer: { ...s.transfer, loading: true } }));
+    try {
+      const { transferOwnAccounts } = await this.api();
+      await transferOwnAccounts({ accounts, fromId: transfer.fromId, toId: transfer.toId, amount });
+      this.setState((s) => {
+        const newAccounts = s.accounts.map((a) => {
+          if (a.id === transfer.fromId) return { ...a, balance: a.balance - amount };
+          if (a.id === transfer.toId) return { ...a, balance: a.balance + amount };
+          return a;
+        });
+        const toLabel = newAccounts.find((a) => a.id === transfer.toId).label;
+        const newTxns = [{ id: Date.now(), name: 'Transfer to ' + toLabel, date: 'Just now', amount: -amount }, ...s.txns];
+        return { accounts: newAccounts, txns: newTxns, transfer: { ...s.transfer, step: 'success', loading: false } };
+      });
+    } catch (err) {
+      this.setState((s) => ({ transfer: { ...s.transfer, step: 'error', error: err.message, loading: false } }));
+    }
+  };
+
+  setPayMethodPayId = () => this.setState((s) => ({ pay: { ...s.pay, method: 'payid', payid: '', resolvedName: null, resolveError: null, billerCode: '', ref: '' } }));
+  setPayMethodBpay = () => this.setState((s) => ({ pay: { ...s.pay, method: 'bpay', payid: '', resolvedName: null, resolveError: null, billerCode: '', ref: '' } }));
+  setPayFrom = (id) => this.setState((s) => ({ pay: { ...s.pay, fromId: id } }));
+  setPayId = (e) => { const v = e.target.value; this.setState((s) => ({ pay: { ...s.pay, payid: v, resolvedName: null, resolveError: null } })); };
+  setBillerCode = (e) => { const v = e.target.value.replace(/[^0-9]/g, ''); this.setState((s) => ({ pay: { ...s.pay, billerCode: v } })); };
+  setRef = (e) => { const v = e.target.value.replace(/[^0-9]/g, ''); this.setState((s) => ({ pay: { ...s.pay, ref: v } })); };
+  setPayAmount = (e) => { const v = e.target.value.replace(/[^0-9.]/g, ''); this.setState((s) => ({ pay: { ...s.pay, amount: v } })); };
+  resolvePayIdNow = async () => {
+    const payid = this.state.pay.payid;
+    this.setState((s) => ({ pay: { ...s.pay, resolving: true, resolveError: null } }));
+    try {
+      const { resolvePayId } = await this.api();
+      const { name } = await resolvePayId(payid);
+      this.setState((s) => ({ pay: { ...s.pay, resolving: false, resolvedName: name } }));
+    } catch (err) {
+      this.setState((s) => ({ pay: { ...s.pay, resolving: false, resolveError: err.message, resolvedName: null } }));
+    }
+  };
+  submitPayForm = () => this.setState((s) => ({ pay: { ...s.pay, step: 'review' } }));
+  editPay = () => this.setState((s) => ({ pay: { ...s.pay, step: 'form', error: null } }));
+  confirmPay = async () => {
+    const { accounts, pay, dailySent } = this.state;
+    const amount = parseFloat(pay.amount) || 0;
+    this.setState((s) => ({ pay: { ...s.pay, loading: true } }));
+    try {
+      const { payViaPayId, payViaBpay } = await this.api();
+      if (pay.method === 'payid') {
+        await payViaPayId({ accounts, fromId: pay.fromId, amount, sentToday: dailySent });
+      } else {
+        await payViaBpay({ accounts, fromId: pay.fromId, billerCode: pay.billerCode, ref: pay.ref, amount });
+      }
+      this.setState((s) => {
+        const newAccounts = s.accounts.map((a) => a.id === pay.fromId ? { ...a, balance: a.balance - amount } : a);
+        const label = pay.method === 'payid' ? ('To ' + pay.resolvedName) : ('BPAY ' + pay.billerCode);
+        const newTxns = [{ id: Date.now(), name: label, date: 'Just now', amount: -amount }, ...s.txns];
+        return { accounts: newAccounts, txns: newTxns, dailySent: s.dailySent + amount, pay: { ...s.pay, step: 'success', loading: false } };
+      });
+    } catch (err) {
+      this.setState((s) => ({ pay: { ...s.pay, step: 'error', error: err.message, loading: false } }));
+    }
+  };
+
+  backToHub = () => this.setState((s) => ({ concierge: { ...s.concierge, step: 'hub', category: null } }));
+  submitConciergeRequest = async () => {
+    this.setState((s) => ({ concierge: { ...s.concierge, requesting: true } }));
+    const { requestConcierge } = await this.api();
+    const { ref } = await requestConcierge({ category: this.state.concierge.category });
+    this.setState((s) => ({ concierge: { ...s.concierge, requesting: false, step: 'requested', ref } }));
+  };
+
+  renderVals() {
+    const { screen, accounts, txns, transfer, pay, concierge } = this.state;
+    const isHome = screen === 'home', isTransfer = screen === 'transfer', isPay = screen === 'pay', isConcierge = screen === 'concierge', isProfile = screen === 'profile';
+
+    const accountsView = accounts.map((a) => ({ ...a, balanceFmt: this.fmt(a.balance) }));
+    const txnsView = txns.map((t) => ({ ...t, isCredit: t.amount > 0, isDebit: t.amount <= 0, amountFmt: (t.amount < 0 ? '-' : '+') + this.fmt(Math.abs(t.amount)) }));
+
+    const transferFromOptions = accounts.map((a) => ({ ...a, balanceFmt: this.fmt(a.balance), selected: a.id === transfer.fromId, rowStyle: this.rowStyle(a.id === transfer.fromId), onSelect: () => this.setTransferFrom(a.id) }));
+    const transferFromAccount = accounts.find((a) => a.id === transfer.fromId);
+    const transferToAccount = accounts.find((a) => a.id === transfer.toId);
+    const transferAmountNum = parseFloat(transfer.amount) || 0;
+    const transferContinueDisabled = !(transferAmountNum > 0);
+    const transferAmountFmt = this.fmt(transferAmountNum);
+
+    const payMethodIsPayId = pay.method === 'payid', payMethodIsBpay = pay.method === 'bpay';
+    const payMethodPayIdStyle = payMethodIsPayId ? 'color:var(--color-accent);box-shadow:inset 0 0 0 1px var(--color-accent);' : '';
+    const payMethodBpayStyle = payMethodIsBpay ? 'color:var(--color-accent);box-shadow:inset 0 0 0 1px var(--color-accent);' : '';
+    const payFromOptions = accounts.map((a) => ({ ...a, balanceFmt: this.fmt(a.balance), selected: a.id === pay.fromId, rowStyle: this.rowStyle(a.id === pay.fromId), onSelect: () => this.setPayFrom(a.id) }));
+    const payFromAccount = accounts.find((a) => a.id === pay.fromId);
+    const payAmountNum = parseFloat(pay.amount) || 0;
+    const payAmountFmt = this.fmt(payAmountNum);
+    const payContinueDisabled = payMethodIsPayId
+      ? !(pay.resolvedName && payAmountNum > 0)
+      : !(/^\d{6}$/.test(pay.billerCode) && /^\d{6,12}$/.test(pay.ref) && payAmountNum > 0);
+    const payReviewToLabel = payMethodIsPayId ? 'To' : 'Biller';
+    const payReviewToValue = payMethodIsPayId ? (pay.resolvedName + ' (' + pay.payid + ')') : ('Code ' + pay.billerCode + ' · Ref ' + pay.ref);
+
+    const categoriesRaw = [
+      { id: 'shopping', title: 'Shopping offers', desc: 'Cashback and partner discounts at leading retailers.' },
+      { id: 'travel', title: 'Travel booking offers', desc: 'Preferential rates on flights, hotels and lounge access.' },
+      { id: 'fuel', title: 'Fuel offers', desc: 'Discounted fuel at partner service stations.' },
+      { id: 'homeloan', title: 'Home loans', desc: 'Priority rates and a dedicated lending specialist.' },
+    ];
+    const categories = categoriesRaw.map((c) => ({ ...c, onOpen: () => this.setState((s) => ({ concierge: { ...s.concierge, step: 'detail', category: c.id } })) }));
+    const conciergeCategory = categoriesRaw.find((c) => c.id === concierge.category) || categoriesRaw[0];
+
+    const showBack = (isTransfer && (transfer.step === 'form' || transfer.step === 'review')) ||
+      (isPay && (pay.step === 'form' || pay.step === 'review')) ||
+      (isConcierge && concierge.step === 'detail');
+    const showTabBar = isHome || isProfile || (isConcierge && concierge.step === 'hub');
+
+    let headerTitle = 'Meridian';
+    if (isTransfer) headerTitle = 'Transfer money';
+    else if (isPay) headerTitle = 'Pay someone';
+    else if (isConcierge) headerTitle = concierge.step === 'hub' ? 'Concierge' : (concierge.step === 'requested' ? 'Request sent' : conciergeCategory.title);
+    else if (isProfile) headerTitle = 'Profile';
+
+    const activeColor = 'var(--color-accent)', mutedColor = 'color-mix(in srgb, var(--color-text) 55%, transparent)';
+
+    return {
+      isHome, isTransfer, isPay, isConcierge, isProfile, showBack, showTabBar, headerTitle,
+      accountsView, txnsView,
+      goHome: this.goHome, openTransfer: this.openTransfer, openPay: this.openPay, openConcierge: this.openConcierge, openProfile: this.openProfile, goBack: this.goBack,
+
+      transferStepForm: isTransfer && transfer.step === 'form',
+      transferStepReview: isTransfer && transfer.step === 'review',
+      transferStepSuccess: isTransfer && transfer.step === 'success',
+      transferStepError: isTransfer && transfer.step === 'error',
+      transferFromOptions, transferToAccount, transferFromAccount, transferContinueDisabled, transferAmountFmt,
+      transfer, swapTransferAccounts: this.swapTransferAccounts, setTransferAmount: this.setTransferAmount,
+      submitTransferForm: this.submitTransferForm, confirmTransfer: this.confirmTransfer, editTransfer: this.editTransfer,
+      confirmTransferLabel: transfer.loading ? 'Transferring…' : 'Confirm transfer',
+
+      payStepForm: isPay && pay.step === 'form', payStepReview: isPay && pay.step === 'review',
+      payStepSuccess: isPay && pay.step === 'success', payStepError: isPay && pay.step === 'error',
+      payMethodIsPayId, payMethodIsBpay, payMethodPayIdStyle, payMethodBpayStyle,
+      setPayMethodPayId: this.setPayMethodPayId, setPayMethodBpay: this.setPayMethodBpay,
+      payFromOptions, payFromAccount, pay, setPayId: this.setPayId, resolvePayIdNow: this.resolvePayIdNow,
+      resolveButtonLabel: pay.resolving ? 'Finding…' : 'Find',
+      setBillerCode: this.setBillerCode, setRef: this.setRef, setPayAmount: this.setPayAmount,
+      payContinueDisabled, submitPayForm: this.submitPayForm, payAmountFmt, payReviewToLabel, payReviewToValue,
+      confirmPay: this.confirmPay, editPay: this.editPay, confirmPayLabel: pay.loading ? 'Sending…' : 'Confirm payment',
+
+      conciergeStepHub: isConcierge && concierge.step === 'hub',
+      conciergeStepDetail: isConcierge && concierge.step === 'detail',
+      conciergeStepRequested: isConcierge && concierge.step === 'requested',
+      categories, conciergeCategory, concierge, submitConciergeRequest: this.submitConciergeRequest,
+      conciergeRequestLabel: concierge.requesting ? 'Sending request…' : 'Request concierge callback',
+
+      tabHomeColor: isHome ? activeColor : mutedColor,
+      tabTransferColor: isTransfer ? activeColor : mutedColor,
+      tabPayColor: isPay ? activeColor : mutedColor,
+      tabConciergeColor: isConcierge ? activeColor : mutedColor,
+      tabProfileColor: isProfile ? activeColor : mutedColor,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

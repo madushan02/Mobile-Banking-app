@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../systems/modernist/styles.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  html,body{margin:0;padding:0;}
+  .phone-body{width:390px;height:844px;position:relative;overflow:hidden;background:var(--color-bg);display:flex;flex-direction:column;}
+  .statusbar{display:flex;justify-content:space-between;align-items:center;padding:14px var(--space-4) 4px;font-size:12px;font-weight:600;font-family:var(--font-heading);}
+  .scroll{flex:1;overflow-y:auto;padding:var(--space-4);padding-bottom:calc(var(--space-8) + 64px);}
+  .balance-card{padding:var(--space-4);}
+  .balance-amt{font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:28px;letter-spacing:-0.02em;}
+  .qa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-3);margin:var(--space-6) 0;}
+  .qa-item{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;text-align:center;cursor:pointer;}
+  .qa-icon{width:52px;height:52px;border-radius:var(--radius-lg);background:var(--color-surface);border:1px solid var(--color-divider);display:flex;align-items:center;justify-content:center;}
+  .tab-bar{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;align-items:center;padding:10px 0 18px;background:var(--color-bg);border-top:1px solid var(--color-divider);}
+  .tab-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:color-mix(in srgb, var(--color-text) 55%, transparent);}
+  .tab-item.active{color:var(--color-accent);}
+  .tx-row{display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) 0;border-bottom:1px solid var(--color-divider);}
+  .tx-row:last-child{border-bottom:none;}
+  .tx-left{display:flex;align-items:center;gap:12px;}
+  .tx-icon{width:36px;height:36px;border-radius:var(--radius-md);background:var(--color-surface);display:flex;align-items:center;justify-content:center;flex:none;}
+  .tx-name{font-size:14px;font-weight:600;}
+  .tx-date{font-size:11px;color:color-mix(in srgb, var(--color-text) 55%, transparent);}
+</style>
+</head>
+<body>
+<div class="phone-body">
+  <div class="statusbar"><span>9:41</span><span>Meridian Private</span><span>100%</span></div>
+  <div class="nav" style="border-bottom:none;padding-top:0;">
+    <span class="nav-brand">Meridian</span>
+    <button class="btn btn-icon"><i data-lucide="bell" width="18" height="18"></i></button>
+  </div>
+  <div class="scroll">
+    <p class="text-muted" style="font-size:13px;margin-bottom:2px;">Good evening</p>
+    <h3 style="margin-bottom:var(--space-4);">Isabelle Ferreira</h3>
+
+    <div class="card elev-sm balance-card" style="margin-bottom:var(--space-3);">
+      <span class="card-kicker">Everyday account</span>
+      <span class="balance-amt">$8,240.15</span>
+      <span class="card-meta">BSB 062-000 · Acc 4471 8823</span>
+    </div>
+    <div class="card elev-sm balance-card">
+      <span class="card-kicker">Savings account</span>
+      <span class="balance-amt">$32,910.60</span>
+      <span class="card-meta">BSB 062-000 · Acc 4471 8831</span>
+    </div>
+
+    <div class="qa-grid">
+      <div class="qa-item"><div class="qa-icon"><i data-lucide="repeat" width="20" height="20"></i></div>Transfer</div>
+      <div class="qa-item"><div class="qa-icon"><i data-lucide="send" width="20" height="20"></i></div>Pay someone</div>
+      <div class="qa-item"><div class="qa-icon"><i data-lucide="sparkles" width="20" height="20"></i></div>Concierge</div>
+      <div class="qa-item"><div class="qa-icon"><i data-lucide="grid-2x2" width="20" height="20"></i></div>More</div>
+    </div>
+
+    <div class="card elev-sm" style="margin-bottom:var(--space-6);">
+      <span class="card-kicker">Your concierge desk</span>
+      <h4 class="card-title" style="margin-bottom:2px;">Curated for you</h4>
+      <p class="card-body">Offers and bookings, arranged on your behalf.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px;">
+        <span class="tag tag-outline">Travel</span>
+        <span class="tag tag-outline">Shopping</span>
+        <span class="tag tag-outline">Fuel</span>
+        <span class="tag tag-outline">Home loans</span>
+      </div>
+      <button class="btn btn-ghost" style="padding-left:0;">Explore offers →</button>
+    </div>
+
+    <h5 style="margin-bottom:var(--space-2);">Recent activity</h5>
+    <div class="card elev-sm" style="padding:0 var(--space-3);">
+      <div class="tx-row">
+        <div class="tx-left"><div class="tx-icon"><i data-lucide="shopping-bag" width="16" height="16"></i></div><div><div class="tx-name">Woolworths</div><div class="tx-date">Today, 6:42pm</div></div></div>
+        <div>-$64.20</div>
+      </div>
+      <div class="tx-row">
+        <div class="tx-left"><div class="tx-icon"><i data-lucide="send" width="16" height="16"></i></div><div><div class="tx-name">To Marcus Nguyen</div><div class="tx-date">Yesterday</div></div></div>
+        <div>-$250.00</div>
+      </div>
+      <div class="tx-row">
+        <div class="tx-left"><div class="tx-icon"><i data-lucide="arrow-down-left" width="16" height="16"></i></div><div><div class="tx-name">Salary — Atlas Group</div><div class="tx-date">Mon</div></div></div>
+        <div>+$4,120.00</div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item active"><i data-lucide="home" width="20" height="20"></i>Home</div>
+    <div class="tab-item"><i data-lucide="repeat" width="20" height="20"></i>Transfers</div>
+    <div class="tab-item"><i data-lucide="send" width="20" height="20"></i>Pay</div>
+    <div class="tab-item"><i data-lucide="sparkles" width="20" height="20"></i>Concierge</div>
+    <div class="tab-item"><i data-lucide="user" width="20" height="20"></i>Profile</div>
+  </div>
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

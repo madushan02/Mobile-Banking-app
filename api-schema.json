@@ -1,0 +1,117 @@
+{
+  "baseUrl": "https://api.meridianbank.com.au/v1",
+  "auth": "Bearer token in Authorization header (mock — not implemented)",
+  "endpoints": [
+    {
+      "name": "Transfer between own accounts",
+      "method": "POST",
+      "path": "/transfers/internal",
+      "request": {
+        "fromAccountId": "everyday",
+        "toAccountId": "savings",
+        "amount": 250.00,
+        "currency": "AUD"
+      },
+      "response_200": {
+        "success": true,
+        "transferId": "TRF-583920",
+        "fromAccountId": "everyday",
+        "toAccountId": "savings",
+        "amount": 250.00,
+        "currency": "AUD",
+        "newFromBalance": 7990.15,
+        "newToBalance": 33160.60,
+        "processedAt": "2026-07-23T09:14:00+10:00"
+      },
+      "errors": [
+        { "status": 400, "code": "same_account", "message": "Choose two different accounts to transfer between." },
+        { "status": 400, "code": "invalid_amount", "message": "Enter an amount greater than $0." },
+        { "status": 422, "code": "insufficient_funds", "message": "Insufficient funds — your Everyday account balance is $8,240.15." }
+      ]
+    },
+    {
+      "name": "Resolve PayID",
+      "method": "GET",
+      "path": "/payid/resolve?value=0412+345+678",
+      "response_200": {
+        "payid": "0412 345 678",
+        "type": "phone",
+        "accountName": "Marcus Nguyen"
+      },
+      "errors": [
+        { "status": 404, "code": "not_found", "message": "We couldn't find an account for that PayID. Check and try again." }
+      ]
+    },
+    {
+      "name": "Pay via PayID",
+      "method": "POST",
+      "path": "/payments/payid",
+      "request": {
+        "fromAccountId": "everyday",
+        "payid": "0412 345 678",
+        "amount": 100.00,
+        "currency": "AUD"
+      },
+      "response_200": {
+        "success": true,
+        "paymentId": "PID-772104",
+        "fromAccountId": "everyday",
+        "payee": { "payid": "0412 345 678", "accountName": "Marcus Nguyen" },
+        "amount": 100.00,
+        "currency": "AUD",
+        "newFromBalance": 8140.15,
+        "dailyLimitRemaining": 4900.00,
+        "processedAt": "2026-07-23T09:20:00+10:00"
+      },
+      "errors": [
+        { "status": 400, "code": "invalid_amount", "message": "Enter an amount greater than $0." },
+        { "status": 422, "code": "insufficient_funds", "message": "Insufficient funds — your Everyday account balance is $8,240.15." },
+        { "status": 429, "code": "limit_exceeded", "message": "This payment exceeds your daily transfer limit of $5,000." }
+      ]
+    },
+    {
+      "name": "Pay via BPAY",
+      "method": "POST",
+      "path": "/payments/bpay",
+      "request": {
+        "fromAccountId": "everyday",
+        "billerCode": "123456",
+        "reference": "000123456789",
+        "amount": 150.00,
+        "currency": "AUD"
+      },
+      "response_200": {
+        "success": true,
+        "paymentId": "BPY-441209",
+        "fromAccountId": "everyday",
+        "billerCode": "123456",
+        "reference": "000123456789",
+        "amount": 150.00,
+        "currency": "AUD",
+        "newFromBalance": 8090.15,
+        "processedAt": "2026-07-23T09:25:00+10:00"
+      },
+      "errors": [
+        { "status": 400, "code": "invalid_biller", "message": "Enter a valid 6-digit BPAY biller code." },
+        { "status": 400, "code": "invalid_ref", "message": "Reference number must be 6–12 digits." },
+        { "status": 400, "code": "invalid_amount", "message": "Enter an amount greater than $0." },
+        { "status": 422, "code": "insufficient_funds", "message": "Insufficient funds — your Everyday account balance is $8,240.15." }
+      ]
+    },
+    {
+      "name": "Request concierge callback",
+      "method": "POST",
+      "path": "/concierge/requests",
+      "request": {
+        "category": "travel"
+      },
+      "response_200": {
+        "success": true,
+        "referenceId": "CN-482913",
+        "category": "travel",
+        "status": "pending_callback",
+        "requestedAt": "2026-07-23T09:30:00+10:00"
+      }
+    }
+  ]
+}

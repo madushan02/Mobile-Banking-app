@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="stylesheet" href="systems/modernist/styles.css">
+<style>
+  body{margin:0;background:var(--color-bg);}
+  .box{border:2px solid var(--color-text);padding:14px 16px;background:var(--color-surface);min-width:170px;}
+  .box-accent{border-color:var(--color-accent);}
+  .lbl{font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:14px;margin-bottom:4px;}
+  .sub{font-size:11px;color:color-mix(in srgb, var(--color-text) 60%, transparent);}
+  .col{display:flex;flex-direction:column;gap:28px;align-items:center;}
+  .arrow{font-size:20px;color:var(--color-text);}
+  .api-lbl{font-size:10px;font-family:monospace;color:var(--color-accent-700);text-align:center;}
+</style>
+</helmet>
+<div style="padding:48px;min-width:1400px;">
+  <h2 style="margin:0 0 6px;">Meridian — App Flow &amp; API Diagram</h2>
+  <p class="text-muted" style="margin:0 0 40px;">Screen flow (top) and the mock API calls each action makes (bottom)</p>
+
+  <div style="display:flex;gap:60px;align-items:flex-start;">
+
+    <div class="col">
+      <div class="box box-accent" style="text-align:center;"><div class="lbl">Home</div><div class="sub">Balances · recent activity</div></div>
+      <div class="arrow">↓</div>
+      <div style="display:flex;gap:40px;">
+        <div class="col">
+          <div class="box"><div class="lbl">Transfer</div><div class="sub">Own accounts</div></div>
+          <div class="arrow">↓</div>
+          <div class="box"><div class="lbl">Review</div></div>
+          <div class="arrow">↓</div>
+          <div class="box box-accent"><div class="lbl">Success / Error</div></div>
+          <div class="api-lbl">POST /transfers/internal</div>
+        </div>
+        <div class="col">
+          <div class="box"><div class="lbl">Pay someone</div><div class="sub">PayID or BPAY</div></div>
+          <div class="arrow">↓</div>
+          <div class="box"><div class="lbl">Review</div></div>
+          <div class="arrow">↓</div>
+          <div class="box box-accent"><div class="lbl">Success / Error</div></div>
+          <div class="api-lbl">GET /payid/resolve<br/>POST /payments/payid<br/>POST /payments/bpay</div>
+        </div>
+        <div class="col">
+          <div class="box"><div class="lbl">Concierge</div><div class="sub">Shopping · Travel · Fuel · Home loans</div></div>
+          <div class="arrow">↓</div>
+          <div class="box"><div class="lbl">Category detail</div></div>
+          <div class="arrow">↓</div>
+          <div class="box box-accent"><div class="lbl">Request sent</div></div>
+          <div class="api-lbl">POST /concierge/requests</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hr" style="margin:44px 0;"></div>
+
+  <h4 style="margin:0 0 16px;">Component / data layer</h4>
+  <div style="display:flex;gap:24px;flex-wrap:wrap;">
+    <div class="box"><div class="lbl">Banking App.dc.html</div><div class="sub">UI + state (accounts, txns, form steps)</div></div>
+    <div class="arrow" style="align-self:center;">→</div>
+    <div class="box box-accent"><div class="lbl">bank-api.js</div><div class="sub">Mock endpoints: validation, delay, errors</div></div>
+    <div class="arrow" style="align-self:center;">↔</div>
+    <div class="box"><div class="lbl">Postman mock server</div><div class="sub">Standalone API testing (same JSON contracts)</div></div>
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>

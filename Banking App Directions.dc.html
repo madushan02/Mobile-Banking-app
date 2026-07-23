@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  body{margin:0;background:#e5e3de;font-family:system-ui,sans-serif;}
+  .frame{position:absolute;display:flex;flex-direction:column;gap:16px;align-items:center;}
+  .frame-label{font:600 14px/1.2 system-ui,sans-serif;color:#1a1a1a;}
+  .frame-sub{font:400 12px/1.4 system-ui,sans-serif;color:rgba(0,0,0,.5);margin-top:-10px;}
+  .phone-shell{width:390px;height:844px;border-radius:36px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25);border:8px solid #111;}
+  .phone-shell iframe{width:100%;height:100%;border:0;display:block;}
+</style>
+</helmet>
+<div class="frame" style="left:80px;top:80px;">
+  <div class="frame-label">Direction 1 — Modernist</div>
+  <div class="frame-sub">Flat, architectural, red accent, flush-left</div>
+  <div class="phone-shell"><iframe src="screens/modernist-home.html"></iframe></div>
+</div>
+<div class="frame" style="left:620px;top:80px;">
+  <div class="frame-label">Direction 2 — Classical</div>
+  <div class="frame-sub">Editorial serif, gold stroke, matted plates</div>
+  <div class="phone-shell"><iframe src="screens/classical-home.html"></iframe></div>
+</div>
+
+</x-dc>
+</body>
+</html>
